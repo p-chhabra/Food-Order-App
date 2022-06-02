@@ -2,6 +2,7 @@ import classes from './Checkout.module.css'
 import React from 'react'
 
 const Checkout = (props) => {
+    return(
     <form action="POST">
         <div className={classes.control}>
             <label htmlFor="name">Your Name</label>
@@ -20,7 +21,7 @@ const Checkout = (props) => {
             <input type="text" id="city"/>
         </div>
         <button>Confirm</button>
-    </form>
+    </form>)
 }
 
 export default Checkout;
