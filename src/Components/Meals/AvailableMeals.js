@@ -1,38 +1,49 @@
-import React from 'react'
+import React,{useEffect, useState} from 'react'
 import Card from '../UI/Card';
 import MealItem from './MealItem/MealItem';
 import './AvailableMeals.css'
 
-const DUMMY_MEALS = [
-    {
-      id: 'm1',
-      name: 'Sushi',
-      description: 'Finest fish and veggies',
-      price: 22.99,
-    },
-    {
-      id: 'm2',
-      name: 'Schnitzel',
-      description: 'A german specialty!',
-      price: 16.5,
-    },
-    {
-      id: 'm3',
-      name: 'Barbecue Burger',
-      description: 'American, raw, meaty',
-      price: 12.99,
-    },
-    {
-      id: 'm4',
-      name: 'Green Bowl',
-      description: 'Healthy...and green...',
-      price: 18.99,
-    },
-  ];
 
 const AvailableMeals = () => {
 
-    const mealsList = DUMMY_MEALS.map((meal) =>{
+  const [meals, setMeals] = useState([]);
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState(null);
+
+  useEffect(()=>{
+    const fetchMeals = async() => {
+      try{
+        setIsLoading(true);
+        setError(null);
+        const response = await fetch('https://react-http-1ca3c-default-rtdb.asia-southeast1.firebasedatabase.app/meals.json');
+        if(!response.ok){
+          throw new Error("Something went wrong!");
+        }
+        const data = await response.json();
+        console.log(data);
+    
+        const  mealsArray = [];
+    
+        for (const key in data) {
+          mealsArray.push({
+            id:key,
+            name: data[key].name,
+            price: data[key].price,
+            description: data[key].description
+          })
+      }
+      setMeals(mealsArray);
+      } catch(error){
+        console.log(error.message);
+        setError(error.message);
+      }  
+      setIsLoading(false);
+       
+    } 
+    fetchMeals();
+  },[])
+
+    const mealsList = meals.map((meal) =>{
         return <MealItem id = {meal.id} key = {meal.id} name ={meal.name} description = {meal.description} price = {meal.price}/>
     })
 
@@ -42,6 +53,8 @@ const AvailableMeals = () => {
         <ul>
             {mealsList}
         </ul>
+        {!isLoading && error && <p>{error}</p>}
+        {isLoading && <p>Loading...</p>}
         </Card>
     </div>
   )

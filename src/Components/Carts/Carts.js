@@ -3,6 +3,7 @@ import Modal from '../UI/Modal'
 import './Carts.css'
 import CartContext from '../../store/cart-context'
 import CartItem from './CartItem'
+import Checkout from './Checkout'
 
 const Carts = (props) => {
 
@@ -34,6 +35,7 @@ const Carts = (props) => {
             <span>Total Amount</span>
             <span>{totalAmount}</span>
         </div>
+        <Checkout/>
         <div className='actions'>
             <button onClick={props.closeCart} className='button--alt'>Close</button>
             {hasItems && <button className='buttons'>Order</button>}
